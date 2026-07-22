@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기계시스템과 기능사 종목 조사 - 부산기계공업고등학교</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Atmosphere -->
+    <div class="bg-decorations">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <img src="logo.png" alt="부산기계공업고등학교 로고" class="nav-logo">
+            <span>부산기계공업고등학교</span>
+        </div>
+        <button type="button" class="admin-trigger-btn" id="openAdminAuthBtn">
+            <i class="fa-solid fa-lock"></i> 관리자 모드
+        </button>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Main Header -->
+        <header class="main-header">
+            <h1 class="main-title">기계시스템과 기능사 종목 조사</h1>
+            <p class="header-desc">학년, 반, 번호, 이름, 신청 기능사 종목을 정확히 기입해주세요.</p>
+        </header>
+
+        <!-- Main Form Card -->
+        <main class="form-card">
+            <form id="surveyForm">
+                
+                <!-- Notice Banner -->
+                <div class="info-banner">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>입력한 정보는 안전하게 관리되고 있습니다.</span>
+                </div>
+
+                <!-- 1열: 학년, 반, 번호 (3분할 드롭다운) -->
+                <div class="form-row grid-3">
+                    <div class="form-group">
+                        <label for="grade"><i class="fa-solid fa-graduation-cap"></i> 학년 <span class="required">*</span></label>
+                        <select id="grade" required>
+                            <option value="" disabled selected>학년 선택</option>
+                            <option value="1학년">1학년</option>
+                            <option value="2학년">2학년</option>
+                            <option value="3학년">3학년</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="classNum"><i class="fa-solid fa-door-open"></i> 반 <span class="required">*</span></label>
+                        <select id="classNum" required>
+                            <option value="" disabled selected>반 선택</option>
+                            <option value="1반">1반</option>
+                            <option value="2반">2반</option>
+                            <option value="3반">3반</option>
+                            <option value="4반">4반</option>
+                            <option value="5반">5반</option>
+                            <option value="6반">6반</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentNum"><i class="fa-solid fa-hashtag"></i> 번호 <span class="required">*</span></label>
+                        <select id="studentNum" required>
+                            <option value="" disabled selected>번호 선택</option>
+                            <option value="1번">1번</option>
+                            <option value="2번">2번</option>
+                            <option value="3번">3번</option>
+                            <option value="4번">4번</option>
+                            <option value="5번">5번</option>
+                            <option value="6번">6번</option>
+                            <option value="7번">7번</option>
+                            <option value="8번">8번</option>
+                            <option value="9번">9번</option>
+                            <option value="10번">10번</option>
+                            <option value="11번">11번</option>
+                            <option value="12번">12번</option>
+                            <option value="13번">13번</option>
+                            <option value="14번">14번</option>
+                            <option value="15번">15번</option>
+                            <option value="16번">16번</option>
+                            <option value="17번">17번</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 2열: 학생 이름 -->
+                <div class="form-group">
+                    <label for="studentName"><i class="fa-solid fa-user"></i> 이름 <span class="required">*</span></label>
+                    <input type="text" id="studentName" placeholder="성함을 입력하세요 (예: 홍길동)" required>
+                </div>
+
+                <!-- 3열: 기능사 종목 선택 (ㄱㄴㄷ 순 동적 로딩 + 맨 아래 '해당 없음') -->
+                <div class="form-group">
+                    <label for="subject"><i class="fa-solid fa-award"></i> 신청 기능사 종목 <span class="required">*</span></label>
+                    <select id="subject" required>
+                        <option value="" disabled selected>응시할 기능사 종목을 선택하세요</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">조사 제출하기 <i class="fa-solid fa-arrow-right"></i></span>
+                    <span class="spinner" id="spinner" style="display: none;">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i> 구글 시트로 저장 중...
+                    </span>
+                </button>
+
+            </form>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 부산기계공업고등학교 기계시스템과. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <!-- 1. Pre-Submission Confirm Modal (제출 전 최종 확인 모달) -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-card">
+            <div class="modal-icon confirm">
+                <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            <h2>입력 내용 최종 확인</h2>
+            <p>아래 작성하신 정보가 맞는지 꼭 확인해 주세요!</p>
+            
+            <div class="confirm-summary-box" id="confirmSummaryBox">
+                <!-- Dynamic Content via JS -->
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeModal('confirmModal')">다시 수정하기</button>
+                <button type="button" class="btn-primary" id="finalSubmitBtn" onclick="executeFinalSubmission()">네, 제출합니다</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-card">
+            <div class="modal-icon success">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2>제출이 완료되었습니다!</h2>
+            <div class="submitted-info-box" id="submittedInfoBox">
+                <!-- Dynamic Content via JS -->
+            </div>
+            <p style="margin-top: 12px;">선생님의 구글 스프레드시트에 안전하게 기록되었습니다.</p>
+            <button type="button" class="btn-primary" onclick="closeModal('successModal')">확인</button>
+        </div>
+    </div>
+
+    <!-- 3. Admin Password Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card">
+            <div class="modal-icon admin">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h2>관리자 인증</h2>
+            <p>관리자 모드에 접근하려면 비밀번호를 입력하세요.<br><small class="text-muted">(기본 비밀번호: <strong>1234</strong>)</small></p>
+            
+            <form id="authForm" onsubmit="handleAdminAuth(event)">
+                <div class="form-group" style="margin-top: 16px;">
+                    <input type="password" id="adminPasswordInput" placeholder="비밀번호 입력" required autofocus>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('authModal')">취소</button>
+                    <button type="submit" class="btn-primary">로그인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Admin Dashboard Modal -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-card admin-dashboard">
+            <div class="admin-header">
+                <h2><i class="fa-solid fa-sliders"></i> 관리자 설정 모드</h2>
+                <button type="button" class="close-icon-btn" onclick="closeModal('adminModal')">&times;</button>
+            </div>
+            
+            <div class="admin-body">
+                <!-- Section 1: Google Sheet Link & Setting -->
+                <div class="admin-section">
+                    <h3><i class="fa-solid fa-file-excel"></i> 구글 스프레드시트 연동</h3>
+                    <p class="section-desc">Google Apps Script 웹 앱 URL 및 시트 주소 설정</p>
+                    
+                    <div class="form-group">
+                        <label for="gasUrlInput">Apps Script 웹 앱 URL</label>
+                        <input type="url" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sheetUrlInput">구글 스프레드시트 주소</label>
+                        <input type="url" id="sheetUrlInput" placeholder="https://docs.google.com/spreadsheets/d/...">
+                    </div>
+
+                    <div class="admin-btn-group">
+                        <button type="button" class="btn-outline" onclick="saveSheetUrls()">
+                            <i class="fa-solid fa-floppy-disk"></i> 설정 저장
+                        </button>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <!-- Section 2: Pure Google Sheets Roster Direct Update Button -->
+                <div class="admin-section">
+                    <h3><i class="fa-solid fa-user-shield"></i> 구글 시트 학생 명단 바로가기 (100% 개인정보 보안)</h3>
+                    <p class="section-desc">웹사이트에는 학생 정보를 1글자도 남기지 않고, 선생님의 비공개 구글 시트에서 명단을 직접 업데이트합니다.</p>
+
+                    <div class="admin-btn-group" style="margin-bottom: 12px;">
+                        <a id="openRosterSheetBtn" href="#" target="_blank" class="btn-excel" style="width: 100%; justify-content: center; padding: 14px;">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> 📊 구글 시트 열기 (학생 명단 입력 / 수정)
+                        </a>
+                    </div>
+
+                    <div class="info-banner" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <div>
+                            <strong>구글 시트에 명단 입력하는 방법 (10초):</strong><br>
+                            1. 위 <strong>[구글 시트 열기]</strong> 버튼을 클릭하여 시트로 이동합니다.<br>
+                            2. 아래 탭에서 <strong><code>학생명단</code></strong> 탭을 선택합니다.<br>
+                            3. 엑셀의 학년, 반, 번호, 이름 열을 복사하여 붙여넣습니다 (A:학년, B:반, C:번호, D:이름).
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <!-- Section 3: Manage Certificate Subjects -->
+                <div class="admin-section">
+                    <h3><i class="fa-solid fa-list-check"></i> 기능사 종목 관리 (추가 / 삭제)</h3>
+                    <p class="section-desc">학생들이 선택할 기능사 종목을 자유롭게 수정하세요. ('해당 없음'은 고정 표출됩니다)</p>
+                    
+                    <div class="add-subject-box">
+                        <input type="text" id="newSubjectInput" placeholder="새 기능사 종목명 입력 (예: 용접기능사)">
+                        <button type="button" class="btn-add" onclick="addNewSubject()">
+                            <i class="fa-solid fa-plus"></i> 종목 추가
+                        </button>
+                    </div>
+
+                    <div class="subject-list-container">
+                        <ul class="subject-list" id="adminSubjectList">
+                            <!-- Dynamic list items -->
+                        </ul>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <!-- Section 4: Change Password -->
+                <div class="admin-section">
+                    <h3><i class="fa-solid fa-key"></i> 관리자 비밀번호 변경</h3>
+                    <div class="add-subject-box">
+                        <input type="password" id="newPasswordInput" placeholder="새 비밀번호 입력">
+                        <button type="button" class="btn-secondary" onclick="changeAdminPassword()">
+                            <i class="fa-solid fa-shield-halved"></i> 비밀번호 변경
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-footer">
+                <button type="button" class="btn-primary" onclick="closeModal('adminModal')">닫기 및 적용</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
